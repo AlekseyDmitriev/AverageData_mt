@@ -1,0 +1,41 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A new push to the same branch cancels the previous run instead of queueing.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux / GCC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # GDAL comes from the distribution (CMake's FindGDAL module picks it up),
+      # plog is downloaded by CMake itself. Nothing else is required.
+      - name: Install GDAL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgdal-dev ninja-build
+
+      - name: Configure
+        run: >
+          cmake -S . -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DAverageData_mt_FETCH_PLOG=ON
+
+      - name: Build
+        run: cmake --build build -j "$(nproc)"
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure

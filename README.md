@@ -1,5 +1,7 @@
 # AverageData_mt
 
+[![build](https://github.com/AlekseyDmitriev/AverageData_mt/actions/workflows/build.yml/badge.svg)](https://github.com/AlekseyDmitriev/AverageData_mt/actions/workflows/build.yml)
+
 A small, fast command line tool that averages a stack of single-band rasters
 (GeoTIFF) **pixel by pixel** and writes the result as one `Float32` GeoTIFF.
 

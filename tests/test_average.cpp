@@ -184,17 +184,17 @@ static bool read_raster(const std::string& path, Raster& out)
     GDALRasterBand* band = ds->GetRasterBand(1);
     out.type = band->GetRasterDataType();
     out.values.assign(static_cast<size_t>(out.width) * static_cast<size_t>(out.height), 0.0f);
-    band->RasterIO(GF_Read, 0, 0, out.width, out.height, out.values.data(),
-        out.width, out.height, GDT_Float32, 0, 0);
+    if (band->RasterIO(GF_Read, 0, 0, out.width, out.height, out.values.data(),
+            out.width, out.height, GDT_Float32, 0, 0) != CE_None) {
+        report_failure(__FILE__, __LINE__, "cannot read pixels of " + path);
+        GDALClose((GDALDatasetH)ds);
+        return false;
+    }
 
-    // GDAL 3.11 changed GetNoDataValue() from "double*(double*)" to "double(int*)".
-#if GDAL_VERSION_NUM >= GDAL_COMPUTE_VERSION(3, 11, 0)
+    // GetNoDataValue() takes an `int*` success flag in every GDAL version.
     int no_data_flag = FALSE;
     out.nodata = band->GetNoDataValue(&no_data_flag);
     out.has_nodata = no_data_flag == TRUE;
-#else
-    out.has_nodata = band->GetNoDataValue(&out.nodata) != nullptr;
-#endif
 
     ds->GetGeoTransform(out.geo_transform);
     const char* projection = ds->GetProjectionRef();

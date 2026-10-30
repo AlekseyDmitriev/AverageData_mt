@@ -137,16 +137,15 @@ std::vector<std::vector<std::string>> distribute_files(const std::vector<std::st
     return groups;
 }
 
-// Reads the NoData value of a band with a GDAL 3.11 compatible API.
+// Reads the NoData value of a band.
+//
+// GetNoDataValue() takes an `int*` success flag in every GDAL version (this has
+// been the signature since GDAL 1.x), so no version check is needed here.
 bool read_no_data_value(GDALRasterBand* band, double& no_data_value)
 {
-#if GDAL_VERSION_NUM >= GDAL_COMPUTE_VERSION(3, 11, 0)
     int no_data_flag = FALSE;
     no_data_value = band->GetNoDataValue(&no_data_flag);
     return no_data_flag == TRUE;
-#else
-    return band->GetNoDataValue(&no_data_value) != nullptr;
-#endif
 }
 
 // Applies one source block height (0 => automatic) to the given raster width.

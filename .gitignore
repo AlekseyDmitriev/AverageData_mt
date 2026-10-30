@@ -1,0 +1,32 @@
+# Build trees
+build/
+out/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+vcpkg_installed/
+
+# Visual Studio / IDE
+.vs/
+.vscode/
+*.sln
+*.vcxproj
+*.vcxproj.*
+*.user
+
+# Binaries and intermediate files
+*.exe
+*.dll
+*.lib
+*.pdb
+*.ilk
+*.obj
+*.exp
+*.tlog
+
+# Runtime artefacts of the tool itself
+logs/
+*.tif
+*.tiff
+list.txt

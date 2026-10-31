@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "average-data-mt"
+version = "0.1.0"
+description = "Per-pixel averaging of a stack of single-band GeoTIFFs (Python port of AverageData_mt)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Aleksey Dmitriev" }]
+dependencies = [
+    "numpy>=1.26",
+    "rasterio>=1.4",
+    "rioxarray>=0.18",
+    "dask[array]>=2024.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+average-data-mt = "average_data_mt.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/average_data_mt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]

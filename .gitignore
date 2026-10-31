@@ -30,3 +30,10 @@ logs/
 *.tif
 *.tiff
 list.txt
+
+# Python port (python/)
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/

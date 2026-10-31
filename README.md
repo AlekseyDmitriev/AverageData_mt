@@ -127,7 +127,25 @@ average_data.h       public API: AverageOptions, AverageStats, average_data()
 average_data.cpp     the averaging core
 logger.h             plog initialisation (rotating file log)
 tests/               CTest tests + tiny check harness
+python/              Python port of the same algorithm (rioxarray + dask)
 ```
+
+## Python port
+
+`python/` contains an independent implementation of the same algorithm with the
+same CLI and the same semantics (`rioxarray` for raster I/O, `numpy` for
+accumulation, `dask` for parallel block reads). Both implementations produce
+bit-identical output on the same inputs.
+
+```powershell
+cd python
+uv sync --extra dev
+uv run pytest
+uv run python -m average_data_mt -input_file_list list.txt -dst mean.tif
+```
+
+See [python/README.md](python/README.md) for details, the two engines and the
+measured performance.
 
 ## Notes
 
